@@ -1,56 +1,34 @@
-{ 
-    "RD_OT1sh1__1_S64": {
+{
+    "distal--smartseq-3": {
         "R1": [
-            "fastq/RD_OT1sh1__1_S64_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh1__1_S64_L008_R1_001.fastq.gz"
+            "fastq_file/distal--smartseq-3_L001_R1_001.fq.gz"
+        ],
+        "R2": [
+            "fastq_file/distal--smartseq-3_L001_R2_001.fq.gz"
         ]
     },
-    "RD_OT1sh1__2_S65": {
+    "distal--smartseq-4": {
         "R1": [
-            "fastq/RD_OT1sh1__2_S65_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh1__2_S65_L008_R1_001.fastq.gz"
+            "fastq_file/distal--smartseq-4_L001_R1_001.fq.gz"
+        ],
+        "R2": [
+            "fastq_file/distal--smartseq-4_L001_R2_001.fq.gz"
         ]
     },
-    "RD_OT1sh1__3_S66": {
+    "proximal-smartseq-1": {
         "R1": [
-            "fastq/RD_OT1sh1__3_S66_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh1__3_S66_L008_R1_001.fastq.gz"
+            "fastq_file/proximal-smartseq-1_L001_R1_001.fq.gz"
+        ],
+        "R2": [
+            "fastq_file/proximal-smartseq-1_L001_R2_001.fq.gz"
         ]
     },
-    "RD_OT1sh2__1_S67": {
+    "proximal-smartseq-2": {
         "R1": [
-            "fastq/RD_OT1sh2__1_S67_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh2__1_S67_L008_R1_001.fastq.gz"
-        ]
-    },
-    "RD_OT1sh2__2_S68": {
-        "R1": [
-            "fastq/RD_OT1sh2__2_S68_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh2__2_S68_L008_R1_001.fastq.gz"
-        ]
-    },
-    "RD_OT1sh2__3_S69": {
-        "R1": [
-            "fastq/RD_OT1sh2__3_S69_L007_R1_001.fastq.gz",
-            "fastq/RD_OT1sh2__3_S69_L008_R1_001.fastq.gz"
-        ]
-    },
-    "RD_p5115__1_S61": {
-        "R1": [
-            "fastq/RD_p5115__1_S61_L007_R1_001.fastq.gz",
-            "fastq/RD_p5115__1_S61_L008_R1_001.fastq.gz"
-        ]
-    },
-    "RD_p5115__2_S62": {
-        "R1": [
-            "fastq/RD_p5115__2_S62_L007_R1_001.fastq.gz",
-            "fastq/RD_p5115__2_S62_L008_R1_001.fastq.gz"
-        ]
-    },
-    "RD_p5115__3_S63": {
-        "R1": [
-            "fastq/RD_p5115__3_S63_L007_R1_001.fastq.gz",
-            "fastq/RD_p5115__3_S63_L008_R1_001.fastq.gz"
+            "fastq_file/proximal-smartseq-2_L001_R1_001.fq.gz"
+        ],
+        "R2": [
+            "fastq_file/proximal-smartseq-2_L001_R2_001.fq.gz"
         ]
     }
 }

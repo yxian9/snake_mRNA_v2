@@ -21,10 +21,10 @@ FILES = defaultdict(lambda: defaultdict(list))
 ## build the dictionary with full path for each fastq.gz file
 for root, dirs, files in os.walk(args.fastq_dir):
 	for file in files:
-		if file.endswith("fastq.gz"):
+		if file.endswith("fq.gz"):
 			full_path = join(root, file)
 			#R1 will be forward reads, R2 will be reverse reads
-			m = re.search(r"(.*)_(R[12])_[0-9]{3}.fastq.gz",file) ## get the sample lane
+			m = re.search(r"(.*)_L[0-9]{3}_(R[12])_[0-9]{3}.fq.gz",file) ## get the sample lane
 			if m:
 				sample = m.group(1) 
 				#lane = m.group(2) ## no lane information
