@@ -1,0 +1,56 @@
+{ 
+    "RD_OT1sh1__1_S64": {
+        "R1": [
+            "fastq/RD_OT1sh1__1_S64_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh1__1_S64_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_OT1sh1__2_S65": {
+        "R1": [
+            "fastq/RD_OT1sh1__2_S65_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh1__2_S65_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_OT1sh1__3_S66": {
+        "R1": [
+            "fastq/RD_OT1sh1__3_S66_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh1__3_S66_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_OT1sh2__1_S67": {
+        "R1": [
+            "fastq/RD_OT1sh2__1_S67_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh2__1_S67_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_OT1sh2__2_S68": {
+        "R1": [
+            "fastq/RD_OT1sh2__2_S68_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh2__2_S68_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_OT1sh2__3_S69": {
+        "R1": [
+            "fastq/RD_OT1sh2__3_S69_L007_R1_001.fastq.gz",
+            "fastq/RD_OT1sh2__3_S69_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_p5115__1_S61": {
+        "R1": [
+            "fastq/RD_p5115__1_S61_L007_R1_001.fastq.gz",
+            "fastq/RD_p5115__1_S61_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_p5115__2_S62": {
+        "R1": [
+            "fastq/RD_p5115__2_S62_L007_R1_001.fastq.gz",
+            "fastq/RD_p5115__2_S62_L008_R1_001.fastq.gz"
+        ]
+    },
+    "RD_p5115__3_S63": {
+        "R1": [
+            "fastq/RD_p5115__3_S63_L007_R1_001.fastq.gz",
+            "fastq/RD_p5115__3_S63_L008_R1_001.fastq.gz"
+        ]
+    }
+}
