@@ -18,15 +18,17 @@ NGmerge = config['NGmerge'] ## remove the adaptor by the overlap , if the adapto
 # splicesite_index = config['splicesite_index']
 
 ## constructe the target if the inputs are fastqs
-ALL_TRIMMED_FASTQ = expand("01_trim_seq/{sample}_{read}.trimmed.fastq.gz", sample = SAMPLES, read = ["R1", "R2"])
-ALL_FASTQC  = expand("02_fqc/{sample}_{read}.trimmed_fastqc.zip", sample = SAMPLES, read = ["R1", "R2"])
+ALL_TRIMMED_FASTQ_1 = expand("01_trim_seq/{sample}_1.fastq", sample = SAMPLES)
+ALL_TRIMMED_FASTQ_2 = expand("01_trim_seq/{sample}_2.fastq", sample = SAMPLES)
+ALL_FASTQC  = expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
 ALL_BAM = expand("03_bam/{sample}_Aligned.out.sam", sample = SAMPLES)
 ALL_SORTED_BAM = expand("04_sortBam/{sample}.sorted.bam", sample = SAMPLES)
 ALL_stringtie_gtf = expand("05_stringtie/{sample}/{sample}.stringtie.gtf", sample = SAMPLES)
 ALL_bw = expand("06_bigwig/{sample}.bw", sample = SAMPLES)
 ALL_QC = ["07_multiQC/multiQC_log.html"]
 ball_grown = ['ballgown_gene_table.tsv']
-TARGETS.extend(ALL_TRIMMED_FASTQ) 
+TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
+TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
 TARGETS.extend(ALL_BAM) ##append all list to 
 TARGETS.extend(ALL_SORTED_BAM)
 TARGETS.extend(ALL_stringtie_gtf)
@@ -49,20 +51,21 @@ rule trim_fastqs: ## merge fastq
 		r1 = lambda wildcards: FILES[wildcards.sample]['R1'],
 		r2 = lambda wildcards: FILES[wildcards.sample]['R2']
 	output:
-		temp("01_trim_seq/{sample}_R1.trimmed.fastq.gz" ), temp("01_trim_seq/{sample}_R2.trimmed.fastq.gz")
+		("01_trim_seq/{sample}_1.fastq" ), ("01_trim_seq/{sample}_2.fastq")
 	log: "00_log/{sample}_trim_adapter.log"
 	params:
 		jobname = "{sample}"
+	threads : 8
 	# group: "mygroup"
 	message: "trim fastqs {input}: {threads} threads"
 	shell:
 		"""
-		NGmerge  -a  -n {threads} -1 {input[0]} -2 {input[1]}  -o 01_trim_seq/{params.jobname} 2> {log} 
+		NGmerge  -a -y  -n {threads} -1 {input[0]} -2 {input[1]}  -o 01_trim_seq/{params.jobname} 2> {log} 
 		"""
 
 rule fastqc:
-	input:  "01_trim_seq/{sample}_R1.trimmed.fastq.gz" , "01_trim_seq/{sample}_R2.trimmed.fastq.gz"
-	output: "02_fqc/{sample}_R1.trimmed_fastqc.zip" , "02_fqc/{sample}_R2.trimmed_fastqc.zip"
+	input:  "01_trim_seq/{sample}_1.fastq" , "01_trim_seq/{sample}_2.fastq"
+	output: "02_fqc/{sample}_1_fastqc.zip" 
 	log:    "00_log/{sample}_fastqc"
 	# group: "mygroup"
 	params : jobname = "{sample}"
@@ -77,8 +80,8 @@ rule fastqc:
 
 rule hisat_mapping:
 	input: 
-		"01_trim_seq/{sample}_R1.trimmed.fastq.gz", 
-		"01_trim_seq/{sample}_R2.trimmed.fastq.gz"
+		"01_trim_seq/{sample}_1.fastq", 
+		"01_trim_seq/{sample}_2.fastq"
 	output: temp("03_bam/{sample}_Aligned.out.sam")
 	log: "00_log/{sample}_hisat_align"
 	params: 
@@ -93,12 +96,13 @@ rule hisat_mapping:
 		-x {STARINDEX} \
 		-1 {input[0]} \
 		-2 {input[1]} \
-		#--known-splicesite-infile {splicesite_index} \
 		-S {output} \
 		&> {log}
 		"""
 		#--rna-strandness R ## for stand strandness
 		#with the genome_tran no need for the slicesite
+		#--known-splicesite-infile {splicesite_index} \
+
 
 rule sortBam:
 	input: "03_bam/{sample}_Aligned.out.sam"
@@ -170,7 +174,7 @@ rule multiQC:
     input :
         expand("00_log/{sample}_hisat_align", sample = SAMPLES),
         # expand("04aln/{sample}.sorted.bam.flagstat", sample = ALL_SAMPLES),
-        expand("02_fqc/{sample}_{read}.trimmed_fastqc.zip", sample = SAMPLES, read = ["R1", "R2"])
+        expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
     output: "07_multiQC/multiQC_log.html"
     log: "00_log/multiqc.log"
     message: "multiqc for all logs"
