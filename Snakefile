@@ -18,6 +18,8 @@ NGmerge = config['NGmerge'] ## remove the adaptor by the overlap , if the adapto
 # splicesite_index = config['splicesite_index']
 
 ## constructe the target if the inputs are fastqs
+merged_fq_1 = expand("00_merged_seq/{sample}_R1.fastq.gz", sample = SAMPLES)
+merged_fq_2 = expand("00_merged_seq/{sample}_R2.fastq.gz", sample = SAMPLES)
 ALL_TRIMMED_FASTQ_1 = expand("01_trim_seq/{sample}_1.fastq", sample = SAMPLES)
 ALL_TRIMMED_FASTQ_2 = expand("01_trim_seq/{sample}_2.fastq", sample = SAMPLES)
 ALL_FASTQC  = expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
@@ -45,11 +47,27 @@ localrules: all
 rule all:
 	input: TARGETS
 
-
-rule trim_fastqs: ## merge fastq
+rule merge_fastqs: ## merge fastq
 	input:
 		r1 = lambda wildcards: FILES[wildcards.sample]['R1'],
 		r2 = lambda wildcards: FILES[wildcards.sample]['R2']
+	output:
+		"00_merged_seq/{sample}_R1.fastq.gz" , "00_merged_seq/{sample}_R2.fastq.gz"
+	params:
+		jobname = "{sample}"
+	group: "mygroup"
+	threads: 1
+	message: "merging fastqs {input}: {threads} threads"
+	shell:
+		"""
+		cat  {input.r1}  > {output[0]} 
+
+		cat {input.r2} > {output[1]} 
+		"""		
+
+rule trim_fastqs: ## merge fastq
+	input:
+		"00_merged_seq/{sample}_R1.fastq.gz" , "00_merged_seq/{sample}_R2.fastq.gz"
 	output:
 		("01_trim_seq/{sample}_1.fastq" ), ("01_trim_seq/{sample}_2.fastq")
 	log: "00_log/{sample}_trim_adapter.log"
