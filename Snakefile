@@ -34,8 +34,8 @@ TARGETS.extend(ALL_SORTED_BAM)
 TARGETS.extend(ALL_stringtie_gtf)
 TARGETS.extend(ALL_FASTQC) ## check later
 TARGETS.extend(ALL_QC)
-TARGETS.extend(ball_grown)
-TARGETS.extend(ALL_bw)
+#TARGETS.extend(ball_grown) ## 
+#TARGETS.extend(ALL_bw). ##
 
 
 localrules: all
@@ -134,7 +134,7 @@ rule index_bam:
 
 rule stringtie_FPKM_caculation:
 	input: "04_sortBam/{sample}.sorted.bam"
-	output: "05_stringtie/{sample}/{sample}.stringtie.gtf", directory("05_stringtie/{sample}")
+	output: "05_stringtie/{sample}/{sample}.stringtie.gtf"
 	log: "00_log/{sample}_stringtie.log"
 	params:
 		jobname = "{sample}"
