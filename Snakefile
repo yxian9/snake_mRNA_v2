@@ -29,7 +29,7 @@ ALL_QC = ["07_multiQC/multiQC_log.html"]
 ball_grown = ['ballgown_gene_table.tsv']
 TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
 TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
-TARGETS.extend(ALL_BAM) ##append all list to 
+#TARGETS.extend(ALL_BAM) ##append all list to 
 TARGETS.extend(ALL_SORTED_BAM)
 TARGETS.extend(ALL_stringtie_gtf)
 TARGETS.extend(ALL_FASTQC) ## check later
