@@ -15,7 +15,7 @@ hisat = config["hisat"]
 stringtie = config['stringtie']
 TARGETS = []
 NGmerge = config['NGmerge'] ## remove the adaptor by the overlap , if the adaptor contaimination happen, use the cutadaptor
-# splicesite_index = config['splicesite_index']
+
 
 ## constructe the target if the inputs are fastqs
 ALL_TRIMMED_FASTQ_1 = expand("01_trim_seq/{sample}_1.fastq", sample = SAMPLES)
@@ -27,7 +27,8 @@ ALL_SORTED_BAM = expand("04_sortBam/{sample}.sorted.bam", sample = SAMPLES)
 ALL_bw = expand("06_bigwig/{sample}.bw", sample = SAMPLES)
 ALL_QC = ["07_multiQC/multiQC_log.html"]
 # ball_grown = ['ballgown_gene_table.tsv']
-ALL_feature_count = expand( "07_featurecount/{sample}_featureCount.txt", sample = SAMPLES)
+ALL_feature_count = expand( "07_featurecount/{sample}_featureCount.txt", sample = SAMPLES). ## using feature count to generate the table
+
 TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
 TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
 TARGETS.extend(ALL_BAM) ##append all list to 
@@ -122,7 +123,7 @@ rule sam_to_bam:
         """
 		
 rule featureCount_fq:
-    input: ("03_bam/{sample}_Aligned.out.sam")
+    input: ("03_bam/{sample}_Aligned.out.bam")
     output: "07_featurecount/{sample}_featureCount.txt"
     log: "00log/{sample}_featureCount.log"
     params:
@@ -132,7 +133,7 @@ rule featureCount_fq:
     shell:
         """
         # -p for paried-end, counting fragments rather reads
-        featureCounts -T {threads} -p -t exon -g gene_id --extraAttributes gene_name -a {gtf} -o {output} {input} 2> {log}
+        featureCounts -T {threads} -p  -Q 10 -t exon -g gene_id --extraAttributes gene_name -a {gtf} -o {output} {input} 2> {log}
         """
 
 	
@@ -192,7 +193,7 @@ rule make_bigwigs: ## included if need the coverage depth
 	shell:
 		"""
 	# no window smoothing is done, for paired-end, bamCoverage will extend the length to the fragement length of the paired reads
-	bamCoverage -b {input[0]}  --binSize 100 --effectiveGenomeSize 2864785220 --skipNonCoveredRegions --normalizeUsing RPKM -p {threads}  -o {output[0]} 2> {log}
+	bamCoverage -b {input[0]}  --binSize 100  --skipNonCoveredRegions --normalizeUsing RPKM -p {threads}  -o {output[0]} 2> {log}
 		"""
 
 ## for the strand specifc coverage
