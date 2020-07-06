@@ -23,19 +23,23 @@ ALL_TRIMMED_FASTQ_2 = expand("01_trim_seq/{sample}_2.fastq", sample = SAMPLES)
 ALL_FASTQC  = expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
 ALL_BAM = expand("03_bam/{sample}_Aligned.out.sam", sample = SAMPLES)
 ALL_SORTED_BAM = expand("04_sortBam/{sample}.sorted.bam", sample = SAMPLES)
-ALL_stringtie_gtf = expand("05_stringtie/{sample}/{sample}.stringtie.gtf", sample = SAMPLES)
+# ALL_stringtie_gtf = expand("05_stringtie/{sample}/{sample}.stringtie.gtf", sample = SAMPLES)
 ALL_bw = expand("06_bigwig/{sample}.bw", sample = SAMPLES)
 ALL_QC = ["07_multiQC/multiQC_log.html"]
-ball_grown = ['ballgown_gene_table.tsv']
+# ball_grown = ['ballgown_gene_table.tsv']
+ALL_feature_count = expand( "07_featurecount/{sample}_featureCount.txt", sample = SAMPLES)
 TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
 TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
 TARGETS.extend(ALL_BAM) ##append all list to 
-#TARGETS.extend(ALL_SORTED_BAM)
-#TARGETS.extend(ALL_stringtie_gtf)
-#TARGETS.extend(ALL_FASTQC) ## check later
-#TARGETS.extend(ALL_QC)
-#TARGETS.extend(ball_grown) ## 
-#TARGETS.extend(ALL_bw). ##
+TARGETS.extend(ALL_SORTED_BAM)
+# TARGETS.extend(ALL_stringtie_gtf)
+TARGETS.extend(ALL_FASTQC) ## check later
+TARGETS.extend(ALL_QC)
+# TARGETS.extend(ball_grown) ## 
+TARGETS.extend(ALL_bw) ##
+TARGETS.extend(ALL_feature_count)
+
+
 
 
 localrules: all
@@ -51,7 +55,7 @@ rule trim_fastqs: ## merge fastq
 		r1 = lambda wildcards: FILES[wildcards.sample]['R1'],
 		r2 = lambda wildcards: FILES[wildcards.sample]['R2']
 	output:
-		("01_trim_seq/{sample}_1.fastq" ), ("01_trim_seq/{sample}_2.fastq")
+		temp("01_trim_seq/{sample}_1.fastq" ), temp("01_trim_seq/{sample}_2.fastq")
 	log: "00_log/{sample}_trim_adapter.log"
 	params:
 		jobname = "{sample}"
@@ -104,6 +108,34 @@ rule hisat_mapping:
 		#--known-splicesite-infile {splicesite_index} \
 
 
+
+rule sam_to_bam:
+    input: ("03_bam/{sample}_Aligned.out.sam")
+    output: ("03_bam/{sample}_Aligned.out.bam")
+    params:
+        jobname = "{sample}"
+    threads: 1
+    shell:
+        """
+	module load samtools
+        samtools view -S -b {input}  >  {output}
+        """
+		
+rule featureCount_fq:
+    input: ("03_bam/{sample}_Aligned.out.sam")
+    output: "07_featurecount/{sample}_featureCount.txt"
+    log: "00log/{sample}_featureCount.log"
+    params:
+        jobname = "{sample}"
+    threads: 12
+    message: "feature-count {input} : {threads} threads"
+    shell:
+        """
+        # -p for paried-end, counting fragments rather reads
+        featureCounts -T {threads} -p -t exon -g gene_id --extraAttributes gene_name -a {gtf} -o {output} {input} 2> {log}
+        """
+
+	
 rule sortBam:
 	input: "03_bam/{sample}_Aligned.out.sam"
 	output: "04_sortBam/{sample}.sorted.bam"
