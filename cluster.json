@@ -1,0 +1,13 @@
+{
+    "__default__":
+    {
+        "job": "{rule}.{wildcards.sample}",
+        "mem": "12G",
+        "out": "cluster_log/{rule}.{wildcards.sample}.out",
+        "err": "cluster_log/{rule}.{wildcards.sample}.err"
+    },
+        "hisat_mapping":
+    {
+        "mem": "20G"
+    }
+}
