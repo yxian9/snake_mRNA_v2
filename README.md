@@ -7,8 +7,9 @@ generate workflow plot
 snakemake --dag 2> /dev/null | dot -T png > workflow.png
 ```
 the flow is as following
-
+```bash
 snakemake -p -j 24 --cluster-config cluster.json --cluster "sbatch -J {cluster.job} --mem={cluster.mem} -N 1 -n {threads} -o {cluster.out} -e {cluster.err} " &> log &
+```
 
 ![](./workflow.png)
  
