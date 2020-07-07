@@ -205,9 +205,7 @@ rule make_bigwigs: ## included if need the coverage depth
 
 rule multiQC:
     input :
-        expand("00_log/{sample}_hisat_align", sample = SAMPLES),
-        # expand("04aln/{sample}.sorted.bam.flagstat", sample = ALL_SAMPLES),
-        expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
+	ALL_FASTQC, ALL_SORTED_BAM
     output: "07_multiQC/multiQC_log.html"
     log: "00_log/multiqc.log"
     message: "multiqc for all logs"
