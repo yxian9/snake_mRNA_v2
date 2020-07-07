@@ -9,5 +9,9 @@
         "hisat_mapping":
     {
         "mem": "20G"
+    },
+    "sortBam":
+    {
+        "mem": "20G"
     }
 }
