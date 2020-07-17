@@ -21,22 +21,20 @@ NGmerge = config['NGmerge'] ## remove the adaptor by the overlap , if the adapto
 ALL_TRIMMED_FASTQ_1 = expand("01_trim_seq/{sample}_1.fastq", sample = SAMPLES)
 ALL_TRIMMED_FASTQ_2 = expand("01_trim_seq/{sample}_2.fastq", sample = SAMPLES)
 ALL_FASTQC  = expand("02_fqc/{sample}_1_fastqc.zip", sample = SAMPLES)
-ALL_BAM = expand("03_bam/{sample}_Aligned.out.sam", sample = SAMPLES)
+ALL_SAM = expand("03_bam/{sample}_Aligned.out.sam", sample = SAMPLES)
 ALL_SORTED_BAM = expand("04_sortBam/{sample}.sorted.bam", sample = SAMPLES)
 # ALL_stringtie_gtf = expand("05_stringtie/{sample}/{sample}.stringtie.gtf", sample = SAMPLES)
 ALL_bw = expand("06_bigwig/{sample}.bw", sample = SAMPLES)
 ALL_QC = ["07_multiQC/multiQC_log.html"]
 # ball_grown = ['ballgown_gene_table.tsv']
-ALL_feature_count = expand("07_featurecount/{sample}_featureCount.txt", sample = SAMPLES) ## using feature count to generate the table
+ALL_feature_count = ("07_featurecount/featureCount.txt") ## using feature count to generate the table
 
-TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
-TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
-TARGETS.extend(ALL_BAM) ##append all list to 
-TARGETS.extend(ALL_SORTED_BAM)
-# TARGETS.extend(ALL_stringtie_gtf)
+# TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
+# TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
+# TARGETS.extend(ALL_BAM) ##append all list to 
+# TARGETS.extend(ALL_SORTED_BAM)
 TARGETS.extend(ALL_FASTQC) ## check later
-TARGETS.extend(ALL_QC)
-# TARGETS.extend(ball_grown) ## 
+# TARGETS.extend(ALL_QC)
 TARGETS.extend(ALL_bw) ##
 TARGETS.extend(ALL_feature_count)
 
@@ -91,7 +89,7 @@ rule hisat_mapping:
 	log: "00_log/{sample}_hisat_align"
 	params: 
 		jobname = "{sample}"
-	threads: 10
+	threads: 12
 	# group: "mygroup"
 	message: "aligning {input} using hisat: {threads} threads"
 	shell:
@@ -110,30 +108,17 @@ rule hisat_mapping:
 
 
 
-rule sam_to_bam:
-    input: ("03_bam/{sample}_Aligned.out.sam")
-    output: ("03_bam/{sample}_Aligned.out.bam")
-    params:
-        jobname = "{sample}"
-    threads: 1
-    shell:
-        """
-	module load samtools
-        samtools view -S -b {input}  >  {output}
-        """
 		
 rule featureCount_fq:
-    input: ("03_bam/{sample}_Aligned.out.bam")
-    output: "07_featurecount/{sample}_featureCount.txt"
-    log: "00log/{sample}_featureCount.log"
-    params:
-        jobname = "{sample}"
+    input: ALL_SAM
+    output: "07_featurecount/featureCount.txt"
+    log: "00log/featureCount.log"
     threads: 12
     message: "feature-count {input} : {threads} threads"
     shell:
         """
         # -p for paried-end, counting fragments rather reads
-        featureCounts -T {threads} -p  -Q 10 -t exon -g gene_id --extraAttributes gene_name -a {gtf} -o {output} {input} 2> {log}
+        featureCounts -T {threads} -p  -Q 10 -t exon -g gene_id --extraAttributes gene_name -a {gtf} -o {output} 03_bam/*.sam 2> {log}
         """
 
 	
@@ -165,21 +150,6 @@ rule index_bam:
         samtools index {input} 2> {log}
         """
 
-rule stringtie_FPKM_caculation:
-	input: "04_sortBam/{sample}.sorted.bam"
-	output: "05_stringtie/{sample}/{sample}.stringtie.gtf"
-	log: "00_log/{sample}_stringtie.log"
-	params:
-		jobname = "{sample}"
-	threads: 10
-	group: "mygroup"
-	message: "stringtie {input} : {threads} threads"
-	shell:
-		"""
-		# -p for paried-end, counting fragments rather reads
-		{stringtie} -e -B -p {threads} -G {gtf} -o {output[0]} {input}
-		"""
-## add the bowgrow later
 
 rule make_bigwigs: ## included if need the coverage depth 
 	input : "04_sortBam/{sample}.sorted.bam", "04_sortBam/{sample}.sorted.bam.bai"
@@ -214,13 +184,5 @@ rule multiQC:
         multiqc 02_fqc 00_log -o 07_multiQC -d -f -v -n multiQC_log 2> {log}
         """
 
-rule ballgown:
-    input: 
-    	expand("05_stringtie/{sample}", sample = SAMPLES)
-    output: 'ballgown_gene_table.tsv'
-    shell: 
-    	"""
-        Rscript ballgown.R {input} {output}
-    	""" 
 
 
