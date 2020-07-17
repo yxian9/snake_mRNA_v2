@@ -173,16 +173,16 @@ rule make_bigwigs: ## included if need the coverage depth
 	# bamCoverage -b {input[0]}  --skipNonCoveredRegions --normalizeUsing RPKM --samFlagInclude 16  -p {threads}  -o {output[1]} 2>> {log}
 
 
-rule multiQC:
-    input :
-	ALL_FASTQC, ALL_SORTED_BAM
-    output: "07_multiQC/multiQC_log.html"
-    log: "00_log/multiqc.log"
-    message: "multiqc for all logs"
-    shell:
-        """
-        multiqc 02_fqc 00_log -o 07_multiQC -d -f -v -n multiQC_log 2> {log}
-        """
+# rule multiQC:
+#     input :
+# 	ALL_FASTQC, ALL_SORTED_BAM
+#     output: "07_multiQC/multiQC_log.html"
+#     log: "00_log/multiqc.log"
+#     message: "multiqc for all logs"
+#     shell:
+#         """
+#         multiqc 02_fqc 00_log -o 07_multiQC -d -f -v -n multiQC_log 2> {log}
+#         """
 
 
 
