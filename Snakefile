@@ -27,7 +27,7 @@ ALL_SORTED_BAM = expand("04_sortBam/{sample}.sorted.bam", sample = SAMPLES)
 ALL_bw = expand("06_bigwig/{sample}.bw", sample = SAMPLES)
 ALL_QC = ["07_multiQC/multiQC_log.html"]
 # ball_grown = ['ballgown_gene_table.tsv']
-ALL_feature_count = ("07_featurecount/featureCount.txt") ## using feature count to generate the table
+ALL_feature_count = ["07_featurecount/featureCount.txt"] ## using feature count to generate the table
 
 # TARGETS.extend(ALL_TRIMMED_FASTQ_1) 
 # TARGETS.extend(ALL_TRIMMED_FASTQ_2) 
