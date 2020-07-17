@@ -1,9 +1,10 @@
 
 ## the index folder for STAR, change to mm9 if it is mouse
-STARINDEX: "//home/gb148/almanlab/genome_ref/hg19_hista2/grch37_tran/genome_tran"
+
+STARINDEX: "~/data/Index/hg19_hista2/grch37_tran/genome_tran"
 ## gtf file for annotation
 
-MYGTF: "/home/gb148/almanlab/genome_ref/hg19_hista2/grch37_tran/Homo_sapiens.GRCh37.75.gtf"
+MYGTF: "~/data/Index/hg19_hista2/grch37_tran/Homo_sapiens.GRCh37.75.gtf"
 ## hisat location
 hisat: "hisat2"
 stringtie : "stringtie"
@@ -11,7 +12,7 @@ stringtie : "stringtie"
 
 # bbbuk: '/work/06032/tg853315/stampede2/software/bbmap/bbduk.sh'
 # adaptors: '/work/06032/tg853315/stampede2/software/bbmap/resources/adapters.fa'
-## use which program to count 
+# MYGTF: "/home/gb148/almanlab/genome_ref/hg19_hista2/grch37_tran/Homo_sapiens.GRCh37.75.gtf"
 
 NGmerge: 'NGmerge'
 
